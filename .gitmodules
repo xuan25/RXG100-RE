@@ -1,0 +1,3 @@
+[submodule "AudioPlugSharp"]
+	path = AudioPlugSharp
+	url = https://github.com/mikeoliphant/AudioPlugSharp.git
