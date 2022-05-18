@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
+  <ItemGroup>
+    <Compile Update="BitmapControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="EditorView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Splash.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="BitmapControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="EditorView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Splash.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,145 @@
+﻿<UserControl x:Class="RXG100.EditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RXG100"
+             mc:Ignorable="d" 
+             d:DesignHeight="294" d:DesignWidth="1100">
+    <UserControl.Resources>
+        <local:NegativeFlagConverter x:Key="NegativeFlagConverter"/>
+    </UserControl.Resources>
+    <Border>
+        <Viewbox Stretch="Uniform">
+            <StackPanel>
+                <!--TopBar-->
+                <Canvas Width="1100" Height="30">
+                    <Image Source="res/TopBar.png" Width="1100" Height="30"/>
+
+                    <local:BitmapSlider Source="res/TopSlider.png" StrideX="0" StrideY="30"
+                                  Width="111" Height="30" OffsetX="0" OffsetY="0" 
+                                  Canvas.Left="124" Canvas.Top="0" 
+                                  Value="0.5"/>
+
+                    <local:BitmapSlider Source="res/TopSlider.png" StrideX="0" StrideY="30"
+                                  Width="111" Height="30" OffsetX="0" OffsetY="0" 
+                                  Canvas.Left="356" Canvas.Top="0" 
+                                  Value="0.5"/>
+
+                    <Button Width="260" Height="30" Cursor="Hand" Canvas.Left="840" Command="{Binding AboutCommand}" CommandParameter="{Binding ElementName=SplashOverlay}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <ContentPresenter/>
+                            </ControlTemplate>
+                        </Button.Template>
+                        <Image>
+                            <Image.Source>
+                                <CroppedBitmap SourceRect="840,0,260,30">
+                                    <CroppedBitmap.Source>
+                                        <BitmapImage UriSource="res/TopBar.png"/>
+                                    </CroppedBitmap.Source>
+                                </CroppedBitmap>
+                            </Image.Source>
+                        </Image>
+                    </Button>
+                </Canvas>
+
+                <Grid>
+                    <!--Main-->
+                    <Canvas Width="1100" Height="264">
+                        <Image Source="res/RGbase.png" Width="1100" Height="264"/>
+
+                        <!--Gain Volumn A Controls-->
+                        <local:BitmapKnob Source="res/RGknobs.jpg" NumFrames="180" StrideX="0" StrideY="264"
+                                  Width="110" Height="108" OffsetX="124" OffsetY="34" 
+                                  Canvas.Left="{Binding RelativeSource={RelativeSource Self}, Path=OffsetX}" Canvas.Top="{Binding RelativeSource={RelativeSource Self}, Path=OffsetY}" 
+                                  Value="0.5"/>
+                        <local:BitmapKnob Source="res/RGknobs.jpg" NumFrames="180" StrideX="0" StrideY="264"
+                                  Width="110" Height="108" OffsetX="234" OffsetY="34"
+                                  Canvas.Left="{Binding RelativeSource={RelativeSource Self}, Path=OffsetX}" Canvas.Top="{Binding RelativeSource={RelativeSource Self}, Path=OffsetY}" 
+                                  Value="0.5"/>
+
+                        <!--Gain Volumn B Controls-->
+                        <local:BitmapKnob Source="res/RGknobs.jpg" NumFrames="180" StrideX="0" StrideY="264"
+                                  Width="110" Height="108" OffsetX="124" OffsetY="142"
+                                  Canvas.Left="{Binding RelativeSource={RelativeSource Self}, Path=OffsetX}" Canvas.Top="{Binding RelativeSource={RelativeSource Self}, Path=OffsetY}" 
+                                  Value="0.5"/>
+                        <local:BitmapKnob Source="res/RGknobs.jpg" NumFrames="180" StrideX="0" StrideY="264"
+                                  Width="110" Height="108" OffsetX="234" OffsetY="142"
+                                  Canvas.Left="{Binding RelativeSource={RelativeSource Self}, Path=OffsetX}" Canvas.Top="{Binding RelativeSource={RelativeSource Self}, Path=OffsetY}" 
+                                  Value="0.5"/>
+
+                        <!--Channel Switch-->
+                        <local:BitmapSwitch x:Name="ChannelSwitch"
+                                    Source="res/RGswitch.png" StrideX="51" StrideY="0"
+                                    Width="51" Height="65" OffsetX="0" OffsetY="0"
+                                    Canvas.Left="368" Canvas.Top="110"
+                                    Value="0"/>
+
+                        <!--Channel Indicators-->
+                        <local:BitmapIndicator Source="res/RGlight1.png" StrideX="53" StrideY="0"
+                                       Width="53" Height="47" OffsetX="0" OffsetY="0"
+                                       Canvas.Left="365" Canvas.Top="57"
+                                       Value="{Binding ElementName=ChannelSwitch, Path=Value}"/>
+                        <local:BitmapIndicator Source="res/RGlight2.png" StrideX="48" StrideY="0"
+                                       Width="48" Height="43" OffsetX="0" OffsetY="0"
+                                       Canvas.Left="365" Canvas.Top="175"
+                                       Value="{Binding ElementName=ChannelSwitch, Path=Value, Converter={StaticResource NegativeFlagConverter}}"/>
+
+                        <!--Boost switch-->
+                        <local:BitmapSwitch x:Name="BoostSwitch"
+                                    Source="res/RGboost.png" StrideX="70" StrideY="0"
+                                    Width="70" Height="64" OffsetX="0" OffsetY="0"
+                                    Canvas.Left="473" Canvas.Top="165"
+                                    Value="1"/>
+
+                        <!--Boost Indicators-->
+                        <local:BitmapIndicator Source="res/RGlight3.png" StrideX="53" StrideY="0"
+                                       Width="53" Height="47" OffsetX="0" OffsetY="0"
+                                       Canvas.Left="475" Canvas.Top="57"
+                                       Value="{Binding ElementName=BoostSwitch, Path=Value}"/>
+
+                        <!--Channel A Controls-->
+                        <local:BitmapKnob Source="res/RGknobs.jpg" NumFrames="180" StrideX="0" StrideY="264"
+                                  Width="110" Height="108" OffsetX="576" OffsetY="34" 
+                                  Canvas.Left="{Binding RelativeSource={RelativeSource Self}, Path=OffsetX}" Canvas.Top="{Binding RelativeSource={RelativeSource Self}, Path=OffsetY}" 
+                                  Value="0.5"/>
+                        <local:BitmapKnob Source="res/RGknobs.jpg" NumFrames="180" StrideX="0" StrideY="264"
+                                  Width="110" Height="108" OffsetX="686" OffsetY="34" 
+                                  Canvas.Left="{Binding RelativeSource={RelativeSource Self}, Path=OffsetX}" Canvas.Top="{Binding RelativeSource={RelativeSource Self}, Path=OffsetY}" 
+                                  Value="0.5"/>
+                        <local:BitmapKnob Source="res/RGknobs.jpg" NumFrames="180" StrideX="0" StrideY="264"
+                                  Width="110" Height="108" OffsetX="796" OffsetY="34" 
+                                  Canvas.Left="{Binding RelativeSource={RelativeSource Self}, Path=OffsetX}" Canvas.Top="{Binding RelativeSource={RelativeSource Self}, Path=OffsetY}" 
+                                  Value="0.5"/>
+                        <local:BitmapKnob Source="res/RGknobs.jpg" NumFrames="180" StrideX="0" StrideY="264"
+                                  Width="110" Height="108" OffsetX="906" OffsetY="34" 
+                                  Canvas.Left="{Binding RelativeSource={RelativeSource Self}, Path=OffsetX}" Canvas.Top="{Binding RelativeSource={RelativeSource Self}, Path=OffsetY}" 
+                                  Value="0.5"/>
+
+                        <!--Channel B Controls-->
+                        <local:BitmapKnob Source="res/RGknobs.jpg" NumFrames="180" StrideX="0" StrideY="264"
+                                  Width="110" Height="108" OffsetX="576" OffsetY="142" 
+                                  Canvas.Left="{Binding RelativeSource={RelativeSource Self}, Path=OffsetX}" Canvas.Top="{Binding RelativeSource={RelativeSource Self}, Path=OffsetY}" 
+                                  Value="0.5"/>
+                        <local:BitmapKnob Source="res/RGknobs.jpg" NumFrames="180" StrideX="0" StrideY="264"
+                                  Width="110" Height="108" OffsetX="686" OffsetY="142" 
+                                  Canvas.Left="{Binding RelativeSource={RelativeSource Self}, Path=OffsetX}" Canvas.Top="{Binding RelativeSource={RelativeSource Self}, Path=OffsetY}" 
+                                  Value="0.5"/>
+                        <local:BitmapKnob Source="res/RGknobs.jpg" NumFrames="180" StrideX="0" StrideY="264"
+                                  Width="110" Height="108" OffsetX="796" OffsetY="142" 
+                                  Canvas.Left="{Binding RelativeSource={RelativeSource Self}, Path=OffsetX}" Canvas.Top="{Binding RelativeSource={RelativeSource Self}, Path=OffsetY}" 
+                                  Value="0.5"/>
+                        <local:BitmapKnob Source="res/RGknobs.jpg" NumFrames="180" StrideX="0" StrideY="264"
+                                  Width="110" Height="108" OffsetX="906" OffsetY="142" 
+                                  Canvas.Left="{Binding RelativeSource={RelativeSource Self}, Path=OffsetX}" Canvas.Top="{Binding RelativeSource={RelativeSource Self}, Path=OffsetY}" 
+                                  Value="0.5"/>
+                    </Canvas>
+
+                    <!--Splash-->
+                    <local:Splash x:Name="SplashOverlay" Visibility="Collapsed"/>
+                </Grid>
+            </StackPanel>
+        </Viewbox>
+    </Border>
+</UserControl>

@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="res\RGbase.png" />
+    <None Remove="res\RGboost.png" />
+    <None Remove="res\RGknobs.jpg" />
+    <None Remove="res\RGlight1.png" />
+    <None Remove="res\RGlight2.png" />
+    <None Remove="res\RGlight3.png" />
+    <None Remove="res\RGswitch.png" />
+    <None Remove="res\SplashBg.png" />
+    <None Remove="res\TopBar.png" />
+    <None Remove="res\TopSlider.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AudioPlugSharp\AudioPlugSharpWPF\AudioPlugSharpWPF.csproj" />
+    <ProjectReference Include="..\AudioPlugSharp\AudioPlugSharp\AudioPlugSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="res\RGbase.png" />
+    <Resource Include="res\RGboost.png" />
+    <Resource Include="res\RGknobs.jpg" />
+    <Resource Include="res\RGlight1.png" />
+    <Resource Include="res\RGlight2.png" />
+    <Resource Include="res\RGlight3.png" />
+    <Resource Include="res\RGswitch.png" />
+    <Resource Include="res\SplashBg.png" />
+    <Resource Include="res\TopBar.png" />
+    <Resource Include="res\TopSlider.png" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy $(SolutionDir)x64\$(ConfigurationName)\AudioPlugSharpVst.vst3 $(TargetDir)$(TargetName)Bridge.vst3&#xD;&#xA;copy $(SolutionDir)x64\$(ConfigurationName)\wpf.runtimeconfig.json $(TargetDir)$(TargetName)Bridge.runtimeconfig.json&#xD;&#xA;copy $(SolutionDir)x64\$(ConfigurationName)\AudioPlugSharpVst.deps.json $(TargetDir)$(TargetName)Bridge.deps.json&#xD;&#xA;copy $(SolutionDir)x64\$(ConfigurationName)\Ijwhost.dll $(TargetDir)" />
+  </Target>
+
+</Project>
