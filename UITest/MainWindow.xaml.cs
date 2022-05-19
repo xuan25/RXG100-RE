@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RXG100;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,26 @@ namespace UITest
         public MainWindow()
         {
             InitializeComponent();
+
+            RXG100Plugin plugin = new RXG100Plugin();
+            plugin.Host = new Host();
+            plugin.Initialize();
+
+            SizeToContent = SizeToContent.WidthAndHeight;
+            EditorView editorView = new EditorView(plugin)
+            {
+                Width = 1100,
+                Height = 294,
+            };
+
+            Content = editorView;
+
+            Loaded += (object sender, RoutedEventArgs e) =>
+            {
+                SizeToContent = SizeToContent.Manual;
+                editorView.Width = double.NaN;
+                editorView.Height = double.NaN;
+            };
         }
     }
 }

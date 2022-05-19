@@ -25,7 +25,6 @@ namespace RXG100
 
         public BitmapControl()
         {
-            DataContext = this;
             InitializeComponent();
 
             Loaded += BitmapKnob_Loaded;

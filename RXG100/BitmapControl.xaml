@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100">
     <Grid>
-        <Image Source="{Binding BackgorundImageSource}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Image Source="{Binding CroppedImageSource}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Image DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType=UserControl}}" Source="{Binding BackgorundImageSource}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Image DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType=UserControl}}" Source="{Binding CroppedImageSource}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>
