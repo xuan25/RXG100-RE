@@ -71,8 +71,8 @@
 
                         <!--Channel Switch-->
                         <local:BitmapSwitch x:Name="ChannelSwitch"
-                                    Source="res/RGswitch.png" StrideX="51" StrideY="0"
-                                    Width="51" Height="65" OffsetX="0" OffsetY="0"
+                                    Source="res/RGswitch.png" StrideX="-51" StrideY="0"
+                                    Width="51" Height="65" OffsetX="51" OffsetY="0"
                                     Canvas.Left="368" Canvas.Top="110"
                                     DataContext="{Binding Plugin.ChannelParam}" Value="{Binding EditValue, Mode=TwoWay}"/>
 
@@ -80,11 +80,11 @@
                         <local:BitmapIndicator Source="res/RGlight1.png" StrideX="53" StrideY="0"
                                        Width="53" Height="47" OffsetX="0" OffsetY="0"
                                        Canvas.Left="365" Canvas.Top="57"
-                                       Value="{Binding ElementName=ChannelSwitch, Path=Value}"/>
+                                       Value="{Binding ElementName=ChannelSwitch, Path=Value, Converter={StaticResource NegativeFlagConverter}}"/>
                         <local:BitmapIndicator Source="res/RGlight2.png" StrideX="48" StrideY="0"
                                        Width="48" Height="43" OffsetX="0" OffsetY="0"
                                        Canvas.Left="365" Canvas.Top="175"
-                                       Value="{Binding ElementName=ChannelSwitch, Path=Value, Converter={StaticResource NegativeFlagConverter}}"/>
+                                       Value="{Binding ElementName=ChannelSwitch, Path=Value}"/>
 
                         <!--Boost switch-->
                         <local:BitmapSwitch x:Name="BoostSwitch"
