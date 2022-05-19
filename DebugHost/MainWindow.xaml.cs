@@ -1,7 +1,8 @@
-﻿using RXG100;
+﻿using AudioPlugSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,30 +15,34 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace UITest
+namespace DebugHost
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(IAudioPlugin plugin, string playFile)
         {
             InitializeComponent();
 
-            RXG100Plugin plugin = new RXG100Plugin();
-            plugin.Host = new Host();
-            plugin.Initialize();
-
-            SizeToContent = SizeToContent.WidthAndHeight;
-            EditorView editorView = new EditorView(plugin)
+            // setup host
+            VstHost host = new VstHost(plugin);
+            if (playFile != null)
             {
-                Width = 1100,
-                Height = 294,
-            };
+                host.PlayAudio(playFile, true);
+            }
+
+            // setup editor view
+            SizeToContent = SizeToContent.WidthAndHeight;
+            UserControl editorView = ((dynamic)plugin).GetEditorView();
+
+            editorView.Width = plugin.Editor.EditorWidth;
+            editorView.Height = plugin.Editor.EditorHeight;
 
             Content = editorView;
 
+            // unlock window size after loaded
             Loaded += (object sender, RoutedEventArgs e) =>
             {
                 SizeToContent = SizeToContent.Manual;

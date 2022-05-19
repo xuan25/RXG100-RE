@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DebugHost": {
+      "commandName": "Project",
+      "commandLineArgs": "RXG100 test.wav"
+    }
+  }
+}
