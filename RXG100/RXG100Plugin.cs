@@ -18,8 +18,8 @@ namespace RXG100
         {
             Company = "Xuan25";
             Website = "xuan25.com";
-            Contact = "contact@my.email";
-            PluginName = "RXG-100";
+            Contact = "shanboxuan@gmail.com";
+            PluginName = "RXG-100-RE";
             PluginCategory = "Fx";
             PluginVersion = "1.0.0";
 
