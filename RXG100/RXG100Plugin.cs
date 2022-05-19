@@ -1,5 +1,9 @@
+using AudioLib;
+using AudioLib.SplineLut;
+using AudioLib.TF;
 using AudioPlugSharp;
 using AudioPlugSharpWPF;
+using RXG100.DSP;
 using System;
 using System.Windows.Controls;
 
@@ -44,6 +48,40 @@ namespace RXG100
         public AudioPluginParameter TrebleBParam { get; set; } = new AudioPluginParameter() { ID = "TrebleB", Name = "TrebleB", Type = EAudioPluginParameterType.Float };
         public AudioPluginParameter PresenceBParam { get; set; } = new AudioPluginParameter() { ID = "PresenceB", Name = "PresenceB", Type = EAudioPluginParameterType.Float };
 
+
+        // ------- Declare modules for processing ----------
+
+        private Highpass1 HighpassInput;
+
+        // Channel A
+        private TF1 TF1A;
+        private SplineInterpolator Stage1A;
+        private TF2 TF2A;
+        private SplineInterpolator Stage2A;
+        private Highpass1 PostVolumeHpA;
+        private TFPres TFPresA;
+        private Tonestack TonestackA;
+
+        // Channel B
+        private TF1 TF1B;
+        private TF12 TF1xB;
+        private SplineInterpolator Stage1B;
+        private TF2 TF2B;
+        private SplineInterpolator Stage2B;
+        private SplineInterpolator ClipperZenerB;
+        private SplineInterpolator ClipperDiodeB;
+        private TFVolume TFVolumeB;
+        private TFPres TFPresB;
+        private Tonestack TonestackB;
+
+        // Hipass filters
+        private Highpass1 H3;
+        private Highpass1 HipassZenerB;
+
+        private Lowpass1 LowpassOutput;
+
+        double SampleRate;
+
         public override void Initialize()
         {
             InputPorts = new AudioIOPort[] { monoInput = new AudioIOPort("Mono Input", EAudioChannelConfiguration.Mono) };
@@ -69,16 +107,47 @@ namespace RXG100
             AddParameter(PresenceBParam);
 
             base.Initialize();
+
+            // Parameter Value Changed event
+
+            ChannelParam.ValueChanged += OnParameterValueChanged;
+
+            InputAParam.ValueChanged += OnParameterValueChanged;
+            GainAParam.ValueChanged += OnParameterValueChanged;
+            VolumnAParam.ValueChanged += OnParameterValueChanged;
+            BassAParam.ValueChanged += OnParameterValueChanged;
+            MidAParam.ValueChanged += OnParameterValueChanged;
+            TrebleAParam.ValueChanged += OnParameterValueChanged;
+            PresenceAParam.ValueChanged += OnParameterValueChanged;
+
+            InputBParam.ValueChanged += OnParameterValueChanged;
+            GainBParam.ValueChanged += OnParameterValueChanged;
+            VolumnBParam.ValueChanged += OnParameterValueChanged;
+            BoostBParam.ValueChanged += OnParameterValueChanged;
+            BassBParam.ValueChanged += OnParameterValueChanged;
+            MidBParam.ValueChanged += OnParameterValueChanged;
+            TrebleBParam.ValueChanged += OnParameterValueChanged;
+            PresenceBParam.ValueChanged += OnParameterValueChanged;
+
+            SampleRate = 48000;
+
+            InitFilters();
+        }
+
+        public override UserControl GetEditorView()
+        {
+            return new EditorView(this);
         }
 
         public override void Process()
         {
             base.Process();
 
-            //double gain = GetParameter("gain").Value;
-            //double linearGain = Math.Pow(10.0, 0.05 * gain);
-
-            //double pan = GetParameter("pan").Value;
+            if (SampleRate != Host.SampleRate)
+            {
+                SampleRate = Host.SampleRate;
+                SetSampleRate(SampleRate);
+            }
 
             monoInput.ReadData();
 
@@ -87,20 +156,218 @@ namespace RXG100
             double[] outLeftSamples = stereoOutput.GetAudioBuffers()[0];
             double[] outRightSamples = stereoOutput.GetAudioBuffers()[1];
 
-            //for (int i = 0; i < inSamples.Length; i++)
-            //{
-            //    outLeftSamples[i] = inSamples[i] * linearGain * (1 - pan);
-            //    outRightSamples[i] = inSamples[i] * linearGain * (1 + pan);
-            //}
+            ProcessBuffer(inSamples, outLeftSamples);
+            for (int i = 0; i < outLeftSamples.Length; i++)
+            {
+                outRightSamples[i] = outLeftSamples[i];
+            }
 
             stereoOutput.WriteData();
         }
 
-        public override UserControl GetEditorView()
+        private void ProcessBuffer(double[] input, double[] output)
         {
-            return new EditorView(this);
+            // copy data to outBuffer
+            for (int i = 0; i < input.Length; i++)
+            {
+                output[i] = input[i];
+            }
+
+            double[] signal = output;
+            HighpassInput.ProcessInPlace(signal);
+
+            // Channel A
+            if (ChannelParam.Value <= 0.5)
+            {
+                var inputGain = Utils.ExpResponse(InputAParam.Value);
+                Utils.GainInPlace(signal, inputGain);
+
+                TF1A.ProcessInPlace(signal);
+                Stage1A.ProcessInPlace(signal);
+
+                TF2A.ProcessInPlace(signal);
+                Stage2A.ProcessInPlace(signal);
+
+                var volume = Utils.ExpResponse(VolumnAParam.Value) * 0.333; // match loudness of channels
+                Utils.GainInPlace(signal, volume);
+
+                PostVolumeHpA.ProcessInPlace(signal);
+                TonestackA.ProcessInPlace(signal);
+                TFPresA.ProcessInPlace(signal);
+            }
+
+            // Channel B
+            if (ChannelParam.Value > 0.5f)
+            {
+                var inputGain = Utils.ExpResponse(InputBParam.Value) * 5;
+                Utils.GainInPlace(signal, inputGain);
+
+                TF1B.ProcessInPlace(signal);
+                TF1xB.ProcessInPlace(signal);
+
+                Stage1B.ProcessInPlace(signal);
+
+                TF2B.ProcessInPlace(signal);
+                Stage2B.ProcessInPlace(signal);
+
+                HipassZenerB.ProcessInPlace(signal);
+                ClipperZenerB.ProcessInPlace(signal);
+
+                if (BoostBParam.Value > 0.5f)
+                {
+                    ClipperDiodeB.ProcessInPlace(signal);
+                    Utils.GainInPlace(signal, 6);
+                }
+
+                TFVolumeB.ProcessInPlace(signal);
+                TonestackB.ProcessInPlace(signal);
+                TFPresB.ProcessInPlace(signal);
+            }
+
+            LowpassOutput.ProcessInPlace(signal);
+
+            // prevent horrible noise in case something goes wrong
+            Utils.SaturateInPlace(signal, -4, 4);
         }
 
+        private void OnParameterValueChanged(AudioPluginParameter parameter)
+        {
+            UpdateFilterSettings(parameter.ParameterIndex);
+        }
 
+        public void SetSampleRate(double samplerate)
+        {
+            this.SampleRate = samplerate;
+
+            HighpassInput.Fs = SampleRate;
+
+            // Channel A
+            TF1A.Fs = SampleRate;
+            TF2A.Fs = SampleRate;
+            PostVolumeHpA.Fs = SampleRate;
+            TFPresA.Fs = SampleRate;
+            TonestackA.Fs = SampleRate;
+
+            // Channel B
+            TF1B.Fs = SampleRate;
+            TF1xB.Fs = SampleRate;
+            TF2B.Fs = SampleRate;
+            TFVolumeB.Fs = SampleRate;
+            TFPresB.Fs = SampleRate;
+            TonestackB.Fs = SampleRate;
+
+            H3.Fs = SampleRate;
+            HipassZenerB.Fs = SampleRate;
+
+            LowpassOutput.Fs = SampleRate;
+
+            UpdateFilterSettings(null);
+        }
+
+        private void InitFilters()
+        {
+            HighpassInput = new Highpass1((float)SampleRate);
+
+            // Channel A
+            TF1A = new TF1(SampleRate);
+            Stage1A = new SplineInterpolator(DSP.Data.Splines.Stage2_2TF);
+
+            TF2A = new TF2(SampleRate);
+            Stage2A = new SplineInterpolator(DSP.Data.Splines.Stage2_2TF);
+
+            PostVolumeHpA = new Highpass1((float)SampleRate);
+            TFPresA = new TFPres(SampleRate);
+            TonestackA = new Tonestack((float)SampleRate);
+
+            // Channel B
+            TF1B = new TF1((float)SampleRate);
+            TF1xB = new TF12((float)SampleRate);
+            Stage1B = new SplineInterpolator(DSP.Data.Splines.Stage1CapSimulatedTF);
+
+            TF2B = new TF2((float)SampleRate);
+            Stage2B = new SplineInterpolator(DSP.Data.Splines.Stage2SimulatedTF);
+
+            ClipperZenerB = new SplineInterpolator(DSP.Data.Splines.ZenerTF);
+            ClipperDiodeB = new SplineInterpolator(DSP.Data.Splines.D1N914TF);
+
+            TFVolumeB = new TFVolume((float)SampleRate);
+            TFPresB = new TFPres((float)SampleRate);
+            TonestackB = new Tonestack((float)SampleRate);
+
+            H3 = new Highpass1((float)SampleRate);
+            HipassZenerB = new Highpass1((float)SampleRate);
+            LowpassOutput = new Lowpass1((float)SampleRate);
+            TonestackA.setComponents(0.200e-9f, 0.022e-6f, 0.02e-6f, 1e3f, 500e3f, 47e3f, 500e3f, 20e3f, 500e3f);
+            TonestackB.setComponents(0.200e-9f, 0.022e-6f, 0.02e-6f, 1e3f, 500e3f, 47e3f, 500e3f, 20e3f, 500e3f);
+
+            SetSampleRate(SampleRate);
+        }
+
+        private void UpdateFilterSettings(int? parameter)
+        {
+            if (parameter == null)
+            {
+                HighpassInput.SetParam(Highpass1.P_FREQ, 180);
+                H3.SetParam(Highpass1.P_FREQ, 59.45f);
+                HipassZenerB.SetParam(Highpass1.P_FREQ, 8);
+                LowpassOutput.SetParam(Lowpass1.P_FREQ, 10000);
+
+                // Channel A ------------------------------------------------------
+                TF1A.Update();
+                TF2A.SetParam(TF2.P_USE_R3, 0.0);
+            }
+
+            if (parameter == null || parameter == GainAParam.ParameterIndex)
+                TF2A.SetParam(TF2.P_GAIN, Utils.ExpResponse(GainAParam.Value));
+
+            if (parameter == null)
+            {
+                PostVolumeHpA.SetParam(Highpass1.P_FREQ, 30);
+                //Stage1A.Bias = -0.5f;
+                Stage1A.Bias = -0.14f;
+                Stage2A.Bias = -0.15f;
+            }
+
+            if (parameter == null || parameter == BassAParam.ParameterIndex || parameter == MidAParam.ParameterIndex || parameter == TrebleAParam.ParameterIndex)
+            {
+                TonestackA.SetParam(Tonestack.P_BASS, Utils.ExpResponse(BassAParam.Value));
+                TonestackA.SetParam(Tonestack.P_MID, MidAParam.Value);
+                TonestackA.SetParam(Tonestack.P_TREBLE, TrebleAParam.Value);
+            }
+
+            if (parameter == null || parameter == PresenceAParam.ParameterIndex)
+                TFPresA.SetParam(TFPres.P_PRES, PresenceAParam.Value);
+
+            // Channel B ------------------------------------------------------
+
+            if (parameter == null)
+            {
+                TF1B.Update();
+                TF2B.SetParam(TF2.P_USE_R3, 1.0);
+                TF1xB.Update();
+            }
+
+            if (parameter == null || parameter == GainBParam.ParameterIndex)
+                TF2B.SetParam(TF2.P_GAIN, Utils.ExpResponse(GainBParam.Value));
+
+            if (parameter == null || parameter == VolumnBParam.ParameterIndex)
+                TFVolumeB.SetParam(TFVolume.P_VOL, Utils.ExpResponse(VolumnBParam.Value));
+
+            if (parameter == null)
+            {
+                Stage1B.Bias = 0.47 - 0.5f;
+                Stage2B.Bias = 0.63 - 0.5f;
+            }
+
+            if (parameter == null || parameter == BassBParam.ParameterIndex || parameter == MidBParam.ParameterIndex || parameter == TrebleBParam.ParameterIndex)
+            {
+                TonestackB.SetParam(Tonestack.P_BASS, Utils.ExpResponse(BassBParam.Value));
+                TonestackB.SetParam(Tonestack.P_MID, MidBParam.Value);
+                TonestackB.SetParam(Tonestack.P_TREBLE, TrebleBParam.Value);
+            }
+
+            if (parameter == null || parameter == PresenceBParam.ParameterIndex)
+                TFPresB.SetParam(TFPres.P_PRES, PresenceBParam.Value);
+        }
     }
 }
