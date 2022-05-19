@@ -45,9 +45,15 @@ namespace DebugHost
             // unlock window size after loaded
             Loaded += (object sender, RoutedEventArgs e) =>
             {
-                SizeToContent = SizeToContent.Manual;
-                editorView.Width = double.NaN;
-                editorView.Height = double.NaN;
+                Task.Factory.StartNew(() =>
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        SizeToContent = SizeToContent.Manual;
+                        editorView.Width = double.NaN;
+                        editorView.Height = double.NaN;
+                    });
+                });
             };
         }
     }
