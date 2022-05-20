@@ -34,11 +34,11 @@
         <TextBlock Text="Developer" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Width="110" Margin="0,70,0,0" TextAlignment="Right"/>
         <TextBlock Text="Website" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Width="110" Margin="0,90,0,0" TextAlignment="Right"/>
 
-        <TextBlock Text="RXG100-RE Amp Simulator" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="135,20,0,0"/>
+        <TextBlock Text="RXG100-RE Amp" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="135,20,0,0"/>
         <TextBlock Text="{Binding CurrentVersion}" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="135,40,0,0"/>
         <TextBlock Text="Xuan25" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="135,70,0,0"/>
         <TextBlock Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="135,90,0,0">
-            <Hyperlink NavigateUri="https://xuan25.com" Command="{Binding NavigateCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=NavigateUri}"><Run>xuan25.com</Run></Hyperlink>
+            <Hyperlink NavigateUri="https://xuan25.com/RXG100-RE" Command="{Binding NavigateCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=NavigateUri}"><Run>xuan25.com</Run></Hyperlink>
         </TextBlock>
 
         <TextBlock Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10">

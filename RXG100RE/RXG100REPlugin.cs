@@ -19,10 +19,10 @@ namespace RXG100RE
         public RXG100REPlugin()
         {
             Company = "Xuan25";
-            Website = "xuan25.com";
+            Website = "https://xuan25.com/RXG100-RE";
             Contact = "shanboxuan@gmail.com";
-            PluginName = "RXG100-RE Amp Simulator";
-            PluginCategory = "Fx";
+            PluginName = "RXG100-RE Amp";
+            PluginCategory = "Fx|Guitar";
             PluginVersion = "1.0.0";
 
             // Unique 64bit ID for the plugin
