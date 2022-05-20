@@ -45,14 +45,14 @@ namespace RXG100RE
         public AudioPluginParameter ChannelParam { get; set; } = new AudioPluginParameter() { ID = "Channel", Name = "Channel", Type = EAudioPluginParameterType.Bool, DefaultValue = 0 };
         public AudioPluginParameter InputAParam { get; set; } = new AudioPluginParameter() { ID = "InputA", Name = "InputA", Type = EAudioPluginParameterType.Float };
         public AudioPluginParameter GainAParam { get; set; } = new AudioPluginParameter() { ID = "GainA", Name = "GainA", Type = EAudioPluginParameterType.Float };
-        public AudioPluginParameter VolumnAParam { get; set; } = new AudioPluginParameter() { ID = "VolumnA", Name = "VolumnA", Type = EAudioPluginParameterType.Float };
+        public AudioPluginParameter VolumeAParam { get; set; } = new AudioPluginParameter() { ID = "VolumeA", Name = "VolumeA", Type = EAudioPluginParameterType.Float };
         public AudioPluginParameter BassAParam { get; set; } = new AudioPluginParameter() { ID = "BassA", Name = "BassA", Type = EAudioPluginParameterType.Float };
         public AudioPluginParameter MidAParam { get; set; } = new AudioPluginParameter() { ID = "MidA", Name = "MidA", Type = EAudioPluginParameterType.Float };
         public AudioPluginParameter TrebleAParam { get; set; } = new AudioPluginParameter() { ID = "TrebleA", Name = "TrebleA", Type = EAudioPluginParameterType.Float };
         public AudioPluginParameter PresenceAParam { get; set; } = new AudioPluginParameter() { ID = "PresenceA", Name = "PresenceA", Type = EAudioPluginParameterType.Float };
         public AudioPluginParameter InputBParam { get; set; } = new AudioPluginParameter() { ID = "InputB", Name = "InputB", Type = EAudioPluginParameterType.Float };
         public AudioPluginParameter GainBParam { get; set; } = new AudioPluginParameter() { ID = "GainB", Name = "GainB", Type = EAudioPluginParameterType.Float };
-        public AudioPluginParameter VolumnBParam { get; set; } = new AudioPluginParameter() { ID = "VolumnB", Name = "VolumnB", Type = EAudioPluginParameterType.Float };
+        public AudioPluginParameter VolumeBParam { get; set; } = new AudioPluginParameter() { ID = "VolumeB", Name = "VolumeB", Type = EAudioPluginParameterType.Float };
         public AudioPluginParameter BoostBParam { get; set; } = new AudioPluginParameter() { ID = "BoostB", Name = "BoostB", Type = EAudioPluginParameterType.Bool, DefaultValue = 0 };
         public AudioPluginParameter BassBParam { get; set; } = new AudioPluginParameter() { ID = "BassB", Name = "BassB", Type = EAudioPluginParameterType.Float };
         public AudioPluginParameter MidBParam { get; set; } = new AudioPluginParameter() { ID = "MidB", Name = "MidB", Type = EAudioPluginParameterType.Float };
@@ -102,7 +102,7 @@ namespace RXG100RE
 
             AddParameter(InputAParam);
             AddParameter(GainAParam);
-            AddParameter(VolumnAParam);
+            AddParameter(VolumeAParam);
             AddParameter(BassAParam);
             AddParameter(MidAParam);
             AddParameter(TrebleAParam);
@@ -110,7 +110,7 @@ namespace RXG100RE
 
             AddParameter(InputBParam);
             AddParameter(GainBParam);
-            AddParameter(VolumnBParam);
+            AddParameter(VolumeBParam);
             AddParameter(BoostBParam);
             AddParameter(BassBParam);
             AddParameter(MidBParam);
@@ -125,7 +125,7 @@ namespace RXG100RE
 
             InputAParam.ValueChanged += OnParameterValueChanged;
             GainAParam.ValueChanged += OnParameterValueChanged;
-            VolumnAParam.ValueChanged += OnParameterValueChanged;
+            VolumeAParam.ValueChanged += OnParameterValueChanged;
             BassAParam.ValueChanged += OnParameterValueChanged;
             MidAParam.ValueChanged += OnParameterValueChanged;
             TrebleAParam.ValueChanged += OnParameterValueChanged;
@@ -133,7 +133,7 @@ namespace RXG100RE
 
             InputBParam.ValueChanged += OnParameterValueChanged;
             GainBParam.ValueChanged += OnParameterValueChanged;
-            VolumnBParam.ValueChanged += OnParameterValueChanged;
+            VolumeBParam.ValueChanged += OnParameterValueChanged;
             BoostBParam.ValueChanged += OnParameterValueChanged;
             BassBParam.ValueChanged += OnParameterValueChanged;
             MidBParam.ValueChanged += OnParameterValueChanged;
@@ -199,7 +199,7 @@ namespace RXG100RE
                 TF2A.ProcessInPlace(signal);
                 Stage2A.ProcessInPlace(signal);
 
-                var volume = Utils.ExpResponse(VolumnAParam.Value) * 0.333; // match loudness of channels
+                var volume = Utils.ExpResponse(VolumeAParam.Value) * 0.333; // match loudness of channels
                 Utils.GainInPlace(signal, volume);
 
                 PostVolumeHpA.ProcessInPlace(signal);
@@ -361,8 +361,8 @@ namespace RXG100RE
             if (parameter == null || parameter == GainBParam.ParameterIndex)
                 TF2B.SetParam(TF2.P_GAIN, Utils.ExpResponse(GainBParam.Value));
 
-            if (parameter == null || parameter == VolumnBParam.ParameterIndex)
-                TFVolumeB.SetParam(TFVolume.P_VOL, Utils.ExpResponse(VolumnBParam.Value));
+            if (parameter == null || parameter == VolumeBParam.ParameterIndex)
+                TFVolumeB.SetParam(TFVolume.P_VOL, Utils.ExpResponse(VolumeBParam.Value));
 
             if (parameter == null)
             {

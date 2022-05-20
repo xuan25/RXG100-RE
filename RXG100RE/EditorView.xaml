@@ -49,7 +49,7 @@
                     <Canvas Width="1100" Height="264">
                         <Image Source="res/RGbase.png" Width="1100" Height="264"/>
 
-                        <!--Gain Volumn A Controls-->
+                        <!--Gain Volume A Controls-->
                         <local:BitmapKnob Source="res/RGknobs.jpg" NumFrames="180" StrideX="0" StrideY="264"
                                   Width="110" Height="108" OffsetX="124" OffsetY="34" 
                                   Canvas.Left="{Binding RelativeSource={RelativeSource Self}, Path=OffsetX}" Canvas.Top="{Binding RelativeSource={RelativeSource Self}, Path=OffsetY}" 
@@ -57,9 +57,9 @@
                         <local:BitmapKnob Source="res/RGknobs.jpg" NumFrames="180" StrideX="0" StrideY="264"
                                   Width="110" Height="108" OffsetX="234" OffsetY="34"
                                   Canvas.Left="{Binding RelativeSource={RelativeSource Self}, Path=OffsetX}" Canvas.Top="{Binding RelativeSource={RelativeSource Self}, Path=OffsetY}" 
-                                  DataContext="{Binding Plugin.VolumnAParam}" Value="{Binding EditValue, Mode=TwoWay}"/>
+                                  DataContext="{Binding Plugin.VolumeAParam}" Value="{Binding EditValue, Mode=TwoWay}"/>
 
-                        <!--Gain Volumn B Controls-->
+                        <!--Gain Volume B Controls-->
                         <local:BitmapKnob Source="res/RGknobs.jpg" NumFrames="180" StrideX="0" StrideY="264"
                                   Width="110" Height="108" OffsetX="124" OffsetY="142"
                                   Canvas.Left="{Binding RelativeSource={RelativeSource Self}, Path=OffsetX}" Canvas.Top="{Binding RelativeSource={RelativeSource Self}, Path=OffsetY}" 
@@ -67,7 +67,7 @@
                         <local:BitmapKnob Source="res/RGknobs.jpg" NumFrames="180" StrideX="0" StrideY="264"
                                   Width="110" Height="108" OffsetX="234" OffsetY="142"
                                   Canvas.Left="{Binding RelativeSource={RelativeSource Self}, Path=OffsetX}" Canvas.Top="{Binding RelativeSource={RelativeSource Self}, Path=OffsetY}" 
-                                  DataContext="{Binding Plugin.VolumnBParam}" Value="{Binding EditValue, Mode=TwoWay}"/>
+                                  DataContext="{Binding Plugin.VolumeBParam}" Value="{Binding EditValue, Mode=TwoWay}"/>
 
                         <!--Channel Switch-->
                         <local:BitmapSwitch x:Name="ChannelSwitch"
