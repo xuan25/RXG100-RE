@@ -3,32 +3,43 @@ using AudioLib.SplineLut;
 using AudioLib.TF;
 using AudioPlugSharp;
 using AudioPlugSharpWPF;
-using RXG100.DSP;
+using RXG100RE.DSP;
 using System;
+using System.Security.Cryptography;
+using System.Text;
 using System.Windows.Controls;
 
-namespace RXG100
+namespace RXG100RE
 {
-    public class RXG100Plugin : AudioPluginWPF
+    public class RXG100REPlugin : AudioPluginWPF
     {
         AudioIOPort monoInput;
         AudioIOPort stereoOutput;
 
-        public RXG100Plugin()
+        public RXG100REPlugin()
         {
             Company = "Xuan25";
             Website = "xuan25.com";
             Contact = "shanboxuan@gmail.com";
-            PluginName = "RXG-100-RE";
+            PluginName = "RXG100-RE Amp Simulator";
             PluginCategory = "Fx";
             PluginVersion = "1.0.0";
 
             // Unique 64bit ID for the plugin
-            PluginID = 0x1E92758E710B4941;
+            PluginID = GenerateIntegerId(PluginName);
 
             HasUserInterface = true;
             EditorWidth = 1100;
             EditorHeight = 294;
+        }
+
+		private ulong GenerateIntegerId(string seedString)
+        {
+            var bytes = Encoding.UTF8.GetBytes(seedString);
+            SHA256 hashAlg = SHA256.Create();
+            byte[] hash = hashAlg.ComputeHash(bytes);
+            ulong num = BitConverter.ToUInt64(hash);
+            return num;
         }
 
         public AudioPluginParameter ChannelParam { get; set; } = new AudioPluginParameter() { ID = "Channel", Name = "Channel", Type = EAudioPluginParameterType.Bool, DefaultValue = 0 };

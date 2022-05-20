@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RXG100\RXG100.csproj" />
+    <ProjectReference Include="..\RXG100RE\RXG100RE.csproj" />
   </ItemGroup>
 
   <ItemGroup>

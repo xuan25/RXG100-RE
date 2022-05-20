@@ -21,9 +21,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sdk", "AudioPlugSharp\vstbu
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sdk_common", "AudioPlugSharp\vstbuild\public.sdk\sdk_common.vcxproj", "{DFA9C546-DA16-3FBE-B700-6EDEC0E64C3F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RXG100", "RXG100\RXG100.csproj", "{E672E701-3DB4-4D8F-803C-02E84F5FA2B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RXG100RE", "RXG100RE\RXG100RE.csproj", "{E672E701-3DB4-4D8F-803C-02E84F5FA2B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugHost", "DebugHost\DebugHost.csproj", "{D18366C6-8302-4703-AEB5-AEC38E72469F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DebugHost", "DebugHost\DebugHost.csproj", "{D18366C6-8302-4703-AEB5-AEC38E72469F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RXG100.DSP.Data
+namespace RXG100RE.DSP.Data
 {
 	public class Splines
 	{

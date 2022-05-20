@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using AudioLib;
 using AudioLib.Modules;
 
-namespace RXG100.DSP
+namespace RXG100RE.DSP
 {
 	/// <summary>
 	/// TF to emulate input stage (before the first JFET)

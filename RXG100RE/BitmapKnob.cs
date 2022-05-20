@@ -5,21 +5,26 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
-namespace RXG100
+namespace RXG100RE
 {
-    internal class BitmapSlider : BitmapControl
+    internal class BitmapKnob : BitmapControl
     {
-        public static readonly DependencyProperty SpeedProperty = DependencyProperty.Register("Speed", typeof(double), typeof(BitmapSlider), new PropertyMetadata(0.005));
+        public static readonly DependencyProperty NumFramesProperty = DependencyProperty.Register("NumFrames", typeof(int), typeof(BitmapKnob), new PropertyMetadata(1, UpdateImageHandler));
+        public int NumFrames
+        {
+            get => (int)GetValue(NumFramesProperty);
+            set => SetValue(NumFramesProperty, value);
+        }
+
+        public static readonly DependencyProperty SpeedProperty = DependencyProperty.Register("Speed", typeof(double), typeof(BitmapKnob), new PropertyMetadata(0.005));
         public double Speed
         {
             get => (double)GetValue(SpeedProperty);
             set => SetValue(SpeedProperty, value);
         }
 
-        public BitmapSlider() : base()
+        public BitmapKnob() : base()
         {
             Cursor = Cursors.Hand;
 
@@ -51,7 +56,7 @@ namespace RXG100
             if (editing)
             {
                 Point currentPos = e.GetPosition(this);
-                double dx = currentPos.X - lastPos.X;
+                double dx = lastPos.Y - currentPos.Y;
 
                 if (dx == 0)
                     return;
@@ -74,22 +79,14 @@ namespace RXG100
             }
         }
 
-        ImageSource lastImageSource;
-
-        public override ImageSource GetFrameImage()
+        public override int GetFrameIndex()
         {
-            if(lastImageSource != Source)
+            int index = (int)Math.Floor(Value * NumFrames);
+            while (index >= NumFrames)
             {
-                BackgorundImageSource = new CroppedBitmap(Source, new Int32Rect(OffsetX, OffsetY, Width, Height));
-                lastImageSource = Source;
+                index--;
             }
-
-            int pixelLen = (int)(Width * Value);
-
-            if(pixelLen == 0) return null;
-
-            Int32Rect sourceRect = new Int32Rect(OffsetX + StrideX, OffsetY + StrideY, OffsetX + pixelLen, Height);
-            return new CroppedBitmap(Source, sourceRect);
+            return index;
         }
     }
 }

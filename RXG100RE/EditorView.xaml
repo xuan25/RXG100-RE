@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="RXG100.EditorView"
+﻿<UserControl x:Class="RXG100RE.EditorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:RXG100"
+             xmlns:local="clr-namespace:RXG100RE"
              mc:Ignorable="d"
              d:DesignHeight="294" d:DesignWidth="1100" d:DataContext="{d:DesignInstance local:EditorView, IsDesignTimeCreatable=True}">
     <UserControl.Resources>

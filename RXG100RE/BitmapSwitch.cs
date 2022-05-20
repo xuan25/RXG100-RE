@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace RXG100
+namespace RXG100RE
 {
     internal class BitmapSwitch : BitmapControl
     {

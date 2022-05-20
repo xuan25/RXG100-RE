@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RXG100
+namespace RXG100RE
 {
     /// <summary>
     /// Interaction logic for Splash.xaml
